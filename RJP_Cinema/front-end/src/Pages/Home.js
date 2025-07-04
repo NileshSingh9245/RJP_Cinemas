@@ -65,30 +65,35 @@ const Home = (props) => {
   return (
     <>
       <Modal />
+      {/* Navbar/Header */}
+      <div className="navbar">
+        <span>RJP Cinemas</span>
+        <span style={{ color: '#00BFFF', fontWeight: 400, fontSize: '1rem' }}>Book Your Show</span>
+      </div>
       <Box sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
         {/*
           Main App Title. To change the app name or style, edit here.
           For future enhancements, update the Typography variant, color, or add a logo.
         */}
         <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 700, letterSpacing: 2 }}>
-          RJP Cinemas
+          <span className="highlight">RJP Cinemas</span>
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
-          <Card sx={{ flex: 1, minWidth: 250, bgcolor: '#f5f5f5' }}>
+          <Card sx={{ flex: 1, minWidth: 250, bgcolor: '#23242B' }}>
             <CardContent>
               <Typography variant="h6" color="text.secondary" gutterBottom>
                 Remaining Seats
               </Typography>
               <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 {Object.entries(remainingSeats).map(([seat, count]) => (
-                  <Alert key={seat} severity={count > 0 ? 'info' : 'error'} sx={{ minWidth: 80, justifyContent: 'center' }}>
+                  <Alert key={seat} severity={count > 0 ? 'info' : 'error'} sx={{ minWidth: 80, justifyContent: 'center', background: '#FFD700', color: '#1C1C1E', fontWeight: 600 }}>
                     {seat}: {count}
                   </Alert>
                 ))}
               </Box>
             </CardContent>
           </Card>
-          <Card sx={{ flex: 2, minWidth: 350 }}>
+          <Card sx={{ flex: 2, minWidth: 350, bgcolor: '#23242B' }}>
             <CardContent>
               <SelectMovie />
               <TimeShedule />
@@ -99,12 +104,12 @@ const Home = (props) => {
             </CardContent>
           </Card>
         </Box>
-        <Card sx={{ mb: 3 }}>
+        <Card sx={{ mb: 3, bgcolor: '#23242B' }}>
           <CardContent>
             <LastBookingDetails />
           </CardContent>
         </Card>
-        <Card>
+        <Card sx={{ bgcolor: '#23242B' }}>
           <CardContent>
             <Typography variant="h6" gutterBottom>All Bookings</Typography>
             <TableContainer component={Paper}>
@@ -140,6 +145,10 @@ const Home = (props) => {
           </CardContent>
         </Card>
       </Box>
+      {/* Footer */}
+      <div className="footer">
+        &copy; {new Date().getFullYear()} RJP Cinemas &mdash; Inspired by BookMyShow UI. All rights reserved.
+      </div>
     </>
   );
 };

@@ -1,46 +1,100 @@
 body, html {
   font-family: 'Inter', Arial, sans-serif;
-  background: #181A20;
-  color: #F5F6FA;
+  background: #F8F9FA;
+  color: #23242B;
   margin: 0;
   padding: 0;
 }
 
 .App {
   min-height: 100vh;
-  background: #181A20;
-  color: #F5F6FA;
+  background: #F8F9FA;
+  color: #23242B;
+}
+
+/* Cinematic BookMyShow-inspired theme */
+/* Navbar for light theme */
+.navbar {
+  background: #fff;
+  color: #FF3B30;
+  padding: 16px 32px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.footer {
+  background: #fff;
+  color: #FF3B30;
+  text-align: center;
+  padding: 16px 0;
+  font-size: 1rem;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
 }
 
 /* Material UI override for primary color */
+/* Material UI override for primary color */
 .MuiButton-containedPrimary {
-  background-color: #E50914 !important;
+  background-color: #FF3B30 !important;
   color: #fff !important;
   font-weight: 600;
   border-radius: 8px;
+  box-shadow: 0 2px 8px #FF3B3033;
+  transition: background 0.2s;
+}
+.MuiButton-containedPrimary:hover {
+  background-color: #FFD700 !important;
+  color: #23242B !important;
 }
 
 /* Card and Table styling for modern look */
 .MuiCard-root, .MuiPaper-root {
-  background: #23242B !important;
-  color: #F5F6FA !important;
+  background: #fff !important;
+  color: #23242B !important;
   border-radius: 12px !important;
+  box-shadow: 0 2px 12px #23242B11;
 }
 
 .MuiTableCell-root {
-  color: #F5F6FA !important;
+  color: #23242B !important;
   font-size: 1rem;
 }
 
 .MuiTypography-h3 {
   font-family: 'Inter', Arial, sans-serif !important;
-  color: #E50914 !important;
+  color: #FF3B30 !important;
   letter-spacing: 2px;
+}
+
+.MuiAlert-root {
+  background: #FFD700 !important;
+  color: #23242B !important;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.MuiCardContent-root {
+  padding: 24px !important;
+}
+
+/* Popcorn Yellow for highlights */
+.highlight {
+  color: #FF3B30;
+  font-weight: 700;
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
   .App {
     padding: 0 8px;
+  }
+  .navbar {
+    font-size: 1.1rem;
+    padding: 12px 8px;
   }
 }
