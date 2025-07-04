@@ -1,0 +1,46 @@
+body, html {
+  font-family: 'Inter', Arial, sans-serif;
+  background: #181A20;
+  color: #F5F6FA;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  min-height: 100vh;
+  background: #181A20;
+  color: #F5F6FA;
+}
+
+/* Material UI override for primary color */
+.MuiButton-containedPrimary {
+  background-color: #E50914 !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+/* Card and Table styling for modern look */
+.MuiCard-root, .MuiPaper-root {
+  background: #23242B !important;
+  color: #F5F6FA !important;
+  border-radius: 12px !important;
+}
+
+.MuiTableCell-root {
+  color: #F5F6FA !important;
+  font-size: 1rem;
+}
+
+.MuiTypography-h3 {
+  font-family: 'Inter', Arial, sans-serif !important;
+  color: #E50914 !important;
+  letter-spacing: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .App {
+    padding: 0 8px;
+  }
+}

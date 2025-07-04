@@ -66,8 +66,12 @@ const Home = (props) => {
     <>
       <Modal />
       <Box sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
-        <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 700, color: '#1976d2' }}>
-          RJP Cinema
+        {/*
+          Main App Title. To change the app name or style, edit here.
+          For future enhancements, update the Typography variant, color, or add a logo.
+        */}
+        <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 700, letterSpacing: 2 }}>
+          RJP Cinemas
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
           <Card sx={{ flex: 1, minWidth: 250, bgcolor: '#f5f5f5' }}>
