@@ -5,7 +5,8 @@ import TimeShedule from "../Components/TimeShedule";
 import Modal from "../Components/ModalComponent";
 import "../Css/Home.css";
 import BsContext from "../Context/BsContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import { Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Box, Button, Alert } from '@mui/material';
 
 const Home = (props) => {
   const context = useContext(BsContext);
@@ -16,7 +17,14 @@ const Home = (props) => {
     handlePostBooking,
     setErrorPopup,
     setErrorMessage,
+    allBookings,
+    remainingSeats,
+    fetchAllBookings
   } = context;
+
+  useEffect(() => {
+    fetchAllBookings();
+  }, [fetchAllBookings]);
 
   const checkNegativeSeatsValidity = (seats) => {
     for (let seat in seats) {
@@ -57,26 +65,77 @@ const Home = (props) => {
   return (
     <>
       <Modal />
-      <div className="container">
-        <h1 className="cinema-title">RJP Cinema</h1>
-        <div className="selection_container">
-          <div className="wrapper">
-            <div className="select_movie_component">
+      <Box sx={{ maxWidth: 900, mx: 'auto', mt: 4 }}>
+        <Typography variant="h3" align="center" gutterBottom sx={{ fontWeight: 700, color: '#1976d2' }}>
+          RJP Cinema
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
+          <Card sx={{ flex: 1, minWidth: 250, bgcolor: '#f5f5f5' }}>
+            <CardContent>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Remaining Seats
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                {Object.entries(remainingSeats).map(([seat, count]) => (
+                  <Alert key={seat} severity={count > 0 ? 'info' : 'error'} sx={{ minWidth: 80, justifyContent: 'center' }}>
+                    {seat}: {count}
+                  </Alert>
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+          <Card sx={{ flex: 2, minWidth: 350 }}>
+            <CardContent>
               <SelectMovie />
-            </div>
-            <div className="last_booking_details_container">
-              <LastBookingDetails />
-            </div>
-          </div>
-          <div className="time_seats_container">
-            <TimeShedule />
-            <SelectSeats />
-            <button onClick={handleBookNow} className="BN-btn">
-              Book Now
-            </button>
-          </div>
-        </div>
-      </div>
+              <TimeShedule />
+              <SelectSeats />
+              <Button onClick={handleBookNow} variant="contained" color="primary" sx={{ mt: 2, width: '100%' }}>
+                Book Now
+              </Button>
+            </CardContent>
+          </Card>
+        </Box>
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <LastBookingDetails />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>All Bookings</Typography>
+            <TableContainer component={Paper}>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Movie</TableCell>
+                    <TableCell>Slot</TableCell>
+                    <TableCell>Seats</TableCell>
+                    <TableCell>Time</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {allBookings.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center">No bookings yet.</TableCell>
+                    </TableRow>
+                  ) : (
+                    allBookings.map((b, idx) => (
+                      <TableRow key={b._id || idx}>
+                        <TableCell>{b.movie}</TableCell>
+                        <TableCell>{b.slot}</TableCell>
+                        <TableCell>
+                          {Object.entries(b.seats).map(([seat, count]) => count > 0 && `${seat}: ${count}`).filter(Boolean).join(", ")}
+                        </TableCell>
+                        <TableCell>{b._id ? new Date(parseInt(b._id.substring(0,8), 16)*1000).toLocaleString() : ''}</TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </CardContent>
+        </Card>
+      </Box>
     </>
   );
 };

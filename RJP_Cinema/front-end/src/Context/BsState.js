@@ -26,12 +26,16 @@ const BsState = (props) => {
 
   // Last movie booking details.
   const [lastBookingDetails, setLastBookingDetails] = useState(null);
+  // All bookings and remaining seats
+  const [allBookings, setAllBookings] = useState([]);
+  const [remainingSeats, setRemainingSeats] = useState({
+    A1: 10, A2: 10, A3: 10, A4: 10, D1: 10, D2: 10
+  });
 
   // handling post request to save booking details on the backend
   const handlePostBooking = async () => {
-    // Sending api request to backend with user selected movie, slot and seats to book movie.
     const response = await fetch(
-      `http://localhost:8080/api/booking`,
+      `/api/booking`,
       {
         method: "POST",
         headers: {
@@ -40,15 +44,10 @@ const BsState = (props) => {
         body: JSON.stringify({ movie: movie, slot: time, seats: noOfSeat }),
       }
     );
-
     const data = await response.json();
-
-    //showing message from backend on popup to user whether success or error
     setErrorPopup(true);
     setErrorMessage(data.message);
-
     if (response.status === 200) {
-      //reset the state on success
       changeTime("");
       changeMovie("");
       changeNoOfSeats({
@@ -60,25 +59,29 @@ const BsState = (props) => {
         D2: "",
       });
       setLastBookingDetails(data.data);
-
-      //clearing the local storage when booking is successfull
       window.localStorage.clear();
+      await fetchAllBookings();
     }
+    if (response.status === 400) {
+      await fetchAllBookings();
+    }
+  };
+
+  // Fetch all bookings and remaining seats
+  const fetchAllBookings = async () => {
+    const response = await fetch(`/bookings`);
+    const data = await response.json();
+    setAllBookings(data.bookings || []);
+    setRemainingSeats(data.remaining || { A1: 10, A2: 10, A3: 10, A4: 10, D1: 10, D2: 10 });
   };
 
   //handle get request to get the last booking details from backend
   const handleGetLastBooking = async () => {
-    const response = await fetch(
-      `http://localhost:8080/api/booking`,
-      {
-        method: "GET",
-      }
-    );
-
-    const data = await response.json();
-
-    // Setting last booking details recieved from the backend.
-    setLastBookingDetails(data.data);
+    if (allBookings.length > 0) {
+      setLastBookingDetails(allBookings[0]);
+    } else {
+      setLastBookingDetails(null);
+    }
   };
 
   useEffect(() => {
@@ -86,7 +89,6 @@ const BsState = (props) => {
     const movie = window.localStorage.getItem("movie");
     const slot = window.localStorage.getItem("slot");
     const seats = JSON.parse(window.localStorage.getItem("seats"));
-
     if(movie){
       changeMovie(movie);
     }
@@ -96,6 +98,7 @@ const BsState = (props) => {
     if(seats){
       changeNoOfSeats(seats);
     }
+    fetchAllBookings();
   }, []);
 
   return (
@@ -104,6 +107,7 @@ const BsState = (props) => {
       value={{
         handlePostBooking,
         handleGetLastBooking,
+        fetchAllBookings,
         movie,
         changeMovie,
         time,
@@ -111,6 +115,8 @@ const BsState = (props) => {
         noOfSeat,
         changeNoOfSeats,
         lastBookingDetails,
+        allBookings,
+        remainingSeats,
         errorPopup,
         setErrorPopup,
         errorMessage,

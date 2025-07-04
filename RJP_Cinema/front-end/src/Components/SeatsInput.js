@@ -1,5 +1,6 @@
 import React from "react";
-import "../Css/SeatsInput.css";
+import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
 
 const SeatsInput = ({
   changeNoOfSeats,
@@ -29,28 +30,19 @@ const SeatsInput = ({
   };
 
   return (
-    <div
-      name={text}
-      className={`form-check-label seats ${
-        seat === text ? "active" : "inactive"
-      }`}
-      id={`${index}text`}
-      onClick={() => {
-        handleChecked(text, index);
-      }}>
-      <span className={"text"}>{text}</span>
-      <input
+    <Box display="flex" alignItems="center" gap={1} mb={1}>
+      <span style={{ minWidth: 30, fontWeight: 500 }}>{text}</span>
+      <TextField
         type="number"
-        className="seats-input"
-        placeholder="0"
+        size="small"
+        variant="outlined"
         name={text}
-        min="0"
-        id={`${index}input`}
-        max="30"
+        inputProps={{ min: 0, max: 30, style: { width: 60 } }}
         onChange={change_seats}
         value={noOfSeat[text]}
+        label="Seats"
       />
-    </div>
+    </Box>
   );
 };
 

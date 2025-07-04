@@ -8,21 +8,40 @@ const app = express();
 router.use(express.json()); // Parse incoming JSON data
 router.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
 
+// Total seats available for each seat type
+const TOTAL_SEATS = { A1: 10, A2: 10, A3: 10, A4: 10, D1: 10, D2: 10 };
+
+// Helper to calculate remaining seats
+async function getRemainingSeats() {
+  const allBookings = await Ticket.find();
+  const remaining = { ...TOTAL_SEATS };
+  allBookings.forEach(b => {
+    for (const seat in b.seats) {
+      remaining[seat] -= Number(b.seats[seat] || 0);
+    }
+  });
+  return remaining;
+}
+
 // Endpoint for creating a new booking and adding it to the database.
 router.post("/booking", async (req, res) => {
   const { movie, slot, seats } = req.body;
-
   try {
-    // Create a new Ticket instance using the provided data
+    // Check for overbooking
+    const remaining = await getRemainingSeats();
+    for (const seat in seats) {
+      if (Number(seats[seat]) > remaining[seat]) {
+        return res.status(400).json({
+          data: null,
+          message: `Not enough seats available for ${seat}. Remaining: ${remaining[seat]}`
+        });
+      }
+    }
+    // Create and save booking
     const myData = new Ticket({ movie, slot, seats });
-
-    // Save the Ticket instance to the database
-    const saved = await myData.save();
-
-    // Respond with success message and the saved data
+    await myData.save();
     res.status(200).json({ data: myData, message: "Booking successful!" });
   } catch (error) {
-    // Handle errors and respond with an error message
     res.status(500).json({
       data: null,
       message: "Something went wrong! Please try again.",
@@ -30,23 +49,16 @@ router.post("/booking", async (req, res) => {
   }
 });
 
-// Endpoint for getting the last booking details from the database and sending it to the frontend.
-router.get("/booking", async (req, res) => {
+// Endpoint for getting all bookings and remaining seats
+router.get("/bookings", async (req, res) => {
   try {
-    // Retrieve the last booking by sorting in descending order and limiting to 1 result
-    const myData = await Ticket.find().sort({ _id: -1 }).limit(1);
-
-    if (myData.length === 0) {
-      // No booking found, respond with appropriate message
-      res.status(200).json({ data: null, message: "No previous booking found!" });
-    } else {
-      // Respond with the last booking details
-      res.status(200).json({ data: myData[0] });
-    }
+    const allBookings = await Ticket.find().sort({ _id: -1 });
+    const remaining = await getRemainingSeats();
+    res.status(200).json({ bookings: allBookings, remaining });
   } catch (error) {
-    // Handle errors and respond with an error message
     res.status(500).json({
-      data: null,
+      bookings: [],
+      remaining: {},
       message: "Something went wrong! Please try again.",
     });
   }

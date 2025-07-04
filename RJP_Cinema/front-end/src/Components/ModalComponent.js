@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import BsContext from "../Context/BsContext";
-import "../Css/ModalComponent.css";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 
 // Modal which takes two props (heading and message), this is called using function showMsg of context.
 function Modal(props) {
@@ -14,25 +14,15 @@ function Modal(props) {
   };
 
   return (
-    <>
-      {errorPopup && (
-        <div
-          className={`modal-container ${errorPopup ? "active" : "inactive"}`}>
-          <div className="modal">
-            <div className="modal-header">
-              <strong>Message</strong>
-            </div>
-            <div className="modal-body">
-              <span>{errorMessage}</span>
-            </div>
-            <div className="modal-footer">
-              <button onClick={handleClosePopup}>Close</button>
-              {/* <button onClick={notOk}>Cancel</button> */}
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <Dialog open={errorPopup} onClose={handleClosePopup}>
+      <DialogTitle>Message</DialogTitle>
+      <DialogContent>
+        <Typography>{errorMessage}</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClosePopup} variant="contained" color="primary">Close</Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

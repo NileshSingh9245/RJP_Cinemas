@@ -13,6 +13,16 @@ app.use(express.urlencoded({ extended: false }))
 // creating an api and seperating it.
 app.use("/api", require("./routes"));
 
+// Serve static files from the React app build folder using absolute path
+const path = require("path");
+const buildPath = path.resolve(__dirname, "../front-end/build");
+app.use(express.static(buildPath));
+
+// For any route not handled by the API, serve the React index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(buildPath, "index.html"));
+});
+
 app.listen(8080,()=>{
     console.log("App listening to port 8080")
 });
